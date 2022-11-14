@@ -5,7 +5,7 @@ do
   break
 done < ./status.txt
 echo "status in the file status.txt:"$status
-if [[ $status != "success" ]]
+if [ $status != "success" ];
 then
   echo "Not a success"
   exit 1
