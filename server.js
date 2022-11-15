@@ -1,5 +1,7 @@
-const http = require('http');
 var jsonPath = require('JSONPath');
+const http = require('http');
+var exec = require('child_process').exec;
+
 
 http.createServer((request, response) => {
   const { headers, method, url } = request;
@@ -17,10 +19,16 @@ http.createServer((request, response) => {
     var result = jsonPath.eval(o, "$..full_name");
     console.log("Full Name of the repo added:")
     console.log(result); 
-   // call the script to protect with two parameters - main branch and repo name got from the json. Script is available online. hence not writing it. Providing a link here
-   // can also github cli if needed
-   // https://gist.github.com/edudobay/decc7d772c8a11db130aef9340d392bf is the link for the
-   //code
+    exec('sh git-branch-protection.sh protect '+ result + ' main' , (err, stdout, stderr) => {
+    if (err) {
+      //some err occurred
+      console.error(err)
+    } else {
+     // the *entire* stdout and stderr (buffered)
+     console.log(`stdout: ${stdout}`);
+     console.log(`stderr: ${stderr}`);
+    }
+  });
     response.on('error', (err) => {
       console.error(err);
     });
